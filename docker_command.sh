@@ -1,3 +1,6 @@
+##############################################################################
+#######################Database setup#########################################
+##############################################################################
 # docker pull postgres
 docker pull postgres:alpine
 
@@ -13,10 +16,7 @@ docker run --name postgres_db \
   -v postgres_data:/var/lib/postgresql/data \
   -d postgres:alpine
 
-
-# 
-
-# image for mariadb
+# image and volume for mariadb
 docker run --name maria_db \
   -e MYSQL_ROOT_PASSWORD=secret \
   -e MYSQL_DATABASE=testdb \
@@ -25,7 +25,6 @@ docker run --name maria_db \
   -p 3306:3306 \
   -v mariadb_data:/var/lib/mysql \
   -d mariadb:10.6
-
 
 # check active image 
 docker ps
@@ -42,3 +41,48 @@ psql -h localhost -U user -d testdb
 #mariadb
 docker exec -it maria_db mysql -u Ritik -p testdb
 mysql -h localhost -u user -p testdb
+
+
+##############################################################################
+#########################python venv #########################################
+##############################################################################
+# Creating python venv
+python3 -m venv python
+
+# activating python venv 
+source python/bin/activate
+
+# upgreating pip version 
+python3 -m pip install --upgrade pip
+
+# check out python verson
+python --version
+
+##############################################################################
+######################## java setup  #########################################
+##############################################################################
+# java instrallition 
+sudo apt update
+sudo apt install -y openjdk-17-jdk
+
+# check out java version 
+jav -version 
+
+# check out java path readlink -f $(which java)
+readlink -f $(which java)
+
+# install java 17.0.10-tem
+sdk install java 17.0.10-tem
+
+# check out java list
+sdk list java
+
+# switch to java 17 
+sdk use java 17.0.10-tem
+
+# set as defualt 
+sdk default java 17.0.10-tem
+
+# conform the directory 
+echo $JAVA_HOME
+
