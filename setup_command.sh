@@ -1,105 +1,119 @@
-##############################################################################
-#######################Database setup#########################################
-##############################################################################
-# docker pull postgres
-docker pull postgres:alpine
+#!/bin/bash
 
-# docker pull mariadb
+##############################################################################
+########################## DATA ENGINEERING SETUP ############################
+##############################################################################
+
+# Exit immediately if any command fails
+
+set -e
+
+##############################################################################
+
+# 1. DOCKER DATABASE SETUP
+
+##############################################################################
+
+# Pull required Docker images (PostgreSQL and MariaDB)
+
+docker pull postgres:alpine
 docker pull mariadb:10.6
 
-# image and volume for postgres 
-docker run --name postgres_db \
-  -e POSTGRES_USER=Ritik \
-  -e POSTGRES_PASSWORD=Ritik@843313 \
-  -e POSTGRES_DB=testdb \
-  -p 5432:5432 \
-  -v postgres_data:/var/lib/postgresql/data \
-  -d postgres:alpine
+# Run PostgreSQL container with user, password, DB, port and volume
 
-# image and volume for mariadb
-docker run --name maria_db \
-  -e MYSQL_ROOT_PASSWORD=secret \
-  -e MYSQL_DATABASE=testdb \
-  -e MYSQL_USER=Ritik \
-  -e MYSQL_PASSWORD=Ritik@843313 \
-  -p 3306:3306 \
-  -v mariadb_data:/var/lib/mysql \
-  -d mariadb:10.6
+docker run -d 
+--name postgres_db 
+-e POSTGRES_USER=Ritik 
+-e POSTGRES_PASSWORD=Ritik@843313 
+-e POSTGRES_DB=testdb 
+-p 5432:5432 
+-v postgres_data:/var/lib/postgresql/data 
+postgres:alpine || true   # Ignore error if container already exists
 
-# check active image 
+# Run MariaDB container with credentials, DB, port and volume
+
+docker run -d 
+--name maria_db 
+-e MYSQL_ROOT_PASSWORD=secret 
+-e MYSQL_DATABASE=testdb 
+-e MYSQL_USER=Ritik 
+-e MYSQL_PASSWORD=Ritik@843313 
+-p 3306:3306 
+-v mariadb_data:/var/lib/mysql 
+mariadb:10.6 || true   # Ignore error if container already exists
+
+# List running containers to verify setup
+
 docker ps
 
-# check all image 
-docker ps -a
+##############################################################################
 
-# connect to db
-
-# for postgres 
-docker exec -it postgres_db psql -U Ritik -d testdb
-psql -h localhost -U user -d testdb
-
-#mariadb
-docker exec -it maria_db mysql -u Ritik -p testdb
-mysql -h localhost -u user -p testdb
-
+# 2. PYTHON VIRTUAL ENVIRONMENT
 
 ##############################################################################
-#########################python venv #########################################
-##############################################################################
-# Creating python venv
+
+# Create a Python virtual environment named 'python'
+
 python3 -m venv python
 
-# activating python venv 
+# Activate the virtual environment
+
 source python/bin/activate
 
-# upgreating pip version 
-python3 -m pip install --upgrade pip
+# Upgrade pip to latest version
 
-# check out python verson
+python -m pip install --upgrade pip
+
+# Check Python version inside virtual environment
+
 python --version
 
 ##############################################################################
-######################## java setup  #########################################
+
+# 3. JAVA SETUP
+
 ##############################################################################
-# java instrallition 
+
+# Update system package list
+
 sudo apt update
+
+# Install OpenJDK 17 (required for PySpark)
+
 sudo apt install -y openjdk-17-jdk
 
-# check out java version 
-jav -version 
+# Verify installed Java version
 
-# check out java path readlink -f $(which java)
+java -version
+
+# Get the actual path of Java binary
+
 readlink -f $(which java)
 
-# install java 17.0.10-tem
-sdk install java 17.0.10-tem
+##############################################################################
 
-# check out java list
-sdk list java
-
-# switch to java 17 
-sdk use java 17.0.10-tem
-
-# set as defualt 
-sdk default java 17.0.10-tem
-
-# conform the directory 
-echo $JAVA_HOME
+# 4. PYTHON DEPENDENCIES
 
 ##############################################################################
-######################## setup python module  ################################
+
+# Remove existing PySpark installation if present
+
+pip uninstall pyspark -y || true
+
+# Install required Python libraries
+
+# - pyspark: for distributed data processing
+
+# - jupyterlab: for notebooks
+
+# - pandas: for data analysis
+
+# - numpy: for numerical operations
+
+pip install pyspark jupyterlab pandas numpy
+
 ##############################################################################
-# unistall it old pyspark are exist 
-pip uninstall pyspark -y
 
-# install it again new version 
-pip install pyspark
+# END OF SETUP
 
-# instralling jupyter lab
-pip install jupyterlab
-
-# instralling pandas 
-pip install pandas 
-
-# installing numpy 
-pip install numpy
+##############################################################################
