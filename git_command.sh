@@ -210,6 +210,18 @@ gh issue close 1
 
 ##############################################################################
 
+# 12. GITHUB CLI (PULL REQUEST MANAGEMENT)
+
+##############################################################################
+
+gh pr create \
+  --base main \
+  --head Ritik574-coder:feature-xyz \
+  --title "Add setup script for data engineering environment" \
+  --body "Added fully commented setup_commands.sh for Docker, Python, and Java setup."
+
+##############################################################################
+
 # END OF GIT + GITHUB COMMANDS
 
 ##############################################################################
