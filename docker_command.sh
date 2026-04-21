@@ -86,3 +86,20 @@ sdk default java 17.0.10-tem
 # conform the directory 
 echo $JAVA_HOME
 
+##############################################################################
+######################## setup python module  ################################
+##############################################################################
+# unistall it old pyspark are exist 
+pip uninstall pyspark -y
+
+# install it again new version 
+pip install pyspark
+
+# instralling jupyter lab
+pip install jupyterlab
+
+# instralling pandas 
+pip install pandas 
+
+# installing numpy 
+pip install numpy
